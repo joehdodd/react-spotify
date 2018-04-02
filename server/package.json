@@ -2,9 +2,14 @@
   "name": "react-spotify-server",
   "version": "1.0.0",
   "author": "Joe Dodd",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.3",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
+    "nodemon": "^1.17.3",
     "querystring": "^0.2.0",
     "request": "^2.85.0"
   }
