@@ -12,46 +12,50 @@ export default class App extends Component {
     if (token) {
       spotify.setAccessToken(token);
     }
-    console.log(params);
     this.state = {
       loggedIn: token ? true : false,
       nowPlaying: { name: 'Not Checked', albumArt: '' }
-    }
+    };
   }
   getHashParams = () => {
     const hashParams = {};
-    let e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-    e = r.exec(q)
-    while (e) {
-       hashParams[e[1]] = decodeURIComponent(e[2]);
-       e = r.exec(q);
+    let elements = [];
+    const regEx = /([^&;=]+)=?([^&;]*)/g;
+    let queryString = window.location.hash.substring(1);
+    elements = regEx.exec(queryString);
+    while (elements) {
+      hashParams[elements[1]] = decodeURIComponent(elements[2]);
+      elements = regEx.exec(queryString);
     }
     return hashParams;
-  }
+  };
   getNowPlaying = () => {
-    spotify.getMyCurrentPlaybackState()
-      .then(response => {
-        this.setState({
-          nowPlaying: {
-            name: response.item.name,
-            albumArt: response.item.album.images[0].url
-          }
-        })
-      })
-  }
+    spotify.getMyCurrentPlaybackState().then(response => {
+      this.setState({
+        nowPlaying: {
+          name: response.item.name,
+          albumArt: response.item.album.images[0].url
+        }
+      });
+      // console.log(response);
+    });
+  };
   render() {
     return (
       <div className="App">
-        <a href='http://localhost:8888/login'>Login to Spotify</a>
+        <a href="http://localhost:8888/login">Login to Spotify</a>
+        <div>Now Playing: {this.state.nowPlaying.name}</div>
         <div>
-          Now Playing: {this.state.nowPlaying.name}
+          <img
+            src={this.state.nowPlaying.albumArt}
+            alt={this.state.nowPlaying.name}
+          />
         </div>
-        { this.state.loggedIn &&
+        {this.state.loggedIn && (
           <button onClick={() => this.getNowPlaying()}>
             Check Now Playing
           </button>
-        }
+        )}
       </div>
     );
   }
